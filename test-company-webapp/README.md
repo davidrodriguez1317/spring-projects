@@ -22,7 +22,7 @@ Once imported the project right click on it, and click Maven > Update project
 Set a server for running the app. In the development Tomcat v7.0 hasa been the one used for running and testing.
 
 When the app is running an HTML page will be displayed with the message TESTCOMPANYAPP WORKING!
-The URLs and the request methods that can be used for trying out the application have this schema:
+The URLs and the request methods that can be used for trying out the application in local have this schema:
 
 	http://<server>:<port>/TestCompanyApp/company								--- POST
 	http://<server>:<port>/TestCompanyApp/company/{id}						--- GET, PUT
@@ -60,7 +60,30 @@ The tests are these:
 
 Additionally, the cURL commands that can be used with the REST API in the server are:
 
-- Get the mocked company --- curl -H "Content-Type: application/json" -X GET http://localhost:8080/TestCompanyApp/company/1
+
+- Get the mocked company with id 1 --- 
+
+	curl -H "Content-Type: application/json" -X GET https://test-company-app.herokuapp.com/company/1
+
+- Insert several companies (A result of 403 will be received if a company with the same name had been previuosly inserted) ---
+
+	curl -X POST https://test-company-app.herokuapp.com/company -H "Content-Type: application/json" --data "{\"name\":\"Big Company v01\",\"address\":\"Elm Street\",\"city\":\"Chicago\",\"country\":\"USA\",\"email\":\"freddycomesforyou@hotmail.com\",\"phone\":\"+0031 677 89 90 66\",\"beneficialOwners\":[]}"
+	
+	curl -X POST https://test-company-app.herokuapp.com/company -H "Content-Type: application/json" --data "{\"name\":\"Big Company v02\",\"address\":\"Elm Street\",\"city\":\"Chicago\",\"country\":\"USA\",\"email\":\"freddycomesforyou@hotmail.com\",\"phone\":\"+0031 677 89 90 66\",\"beneficialOwners\":[]}"
+
+	curl -X POST https://test-company-app.herokuapp.com/company -H "Content-Type: application/json" --data "{\"name\":\"Big Company v03\",\"address\":\"Elm Street\",\"city\":\"Chicago\",\"country\":\"USA\",\"email\":\"freddycomesforyou@hotmail.com\",\"phone\":\"+0031 677 89 90 66\",\"beneficialOwners\":[]}"
+
+- Get all the companies () --- 
+
+	curl -H "Content-Type: application/json" -X GET https://test-company-app.herokuapp.com/company/all
+
+- Try to insert a company that not validates, i.e name smaller than 2 characters
+
+	curl -X POST https://test-company-app.herokuapp.com/company -H "Content-Type: application/json" --data "{\"name\":\"s\",\"address\":\"Elm Street\",\"city\":\"Chicago\",\"country\":\"USA\",\"email\":\"freddycomesforyou@hotmail.com\",\"phone\":\"+0031 677 89 90 66\",\"beneficialOwners\":[]}"
+
+- Try to insert several beneficial owners to a company
+
+	curl -X PUT https://test-company-app.herokuapp.com/company/beneficialowner/1 -H "Content-Type: application/json" --data "[{\"name\": \"David\",\"percentageOwnership\": 50.1},{\"name\":\"John\",\"percentageOwnership\":49.9}]"
 
 
 ## Deployment
@@ -76,10 +99,17 @@ A maven goal can be created for generating a war file in order to deploy it to a
 
 * **David Rodriguez** --- [davidrodriguez1317](https://github.com/davidrodriguez1317)
 
-## License
+## Authentication
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+The authentication for our REST API should be done using OAuth2 over https. For doing this, and as we are using Spring as our framework, Spring security is to be used.
 
-## Acknowledgments
+I personally do not have experience with OAuth2, but I have been working with SAMLv2, and it is similar in several parts:
+- Authorization server: known as Identity Provider in SAML, it has to check if the user is allowed to enter.
+- Resource server: known as Service Provider in SAML, it is our application, where the resources (endpoints) are.
+- Client: our browser
 
+## Service redundancy
 
+Nowadays the best option is the use of microservices, as it is by far the most flexible way of doing it. On the other hand, it increments the difficulty of the implementation, so it has to be dealt with extremely care. For big projects I would suggest this.
+
+Balanced servers on the other hand is the most used historically, and the difficulty of implementation is smaller, so for a small team/application without any experience I would suggest this.
