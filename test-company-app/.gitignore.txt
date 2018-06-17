@@ -1,0 +1,13 @@
+# Compiled source #
+###################
+*.class
+
+# Configuration files #
+#######################
+.classpath
+.project
+.settings/
+
+# Deployment #
+##############
+target/
