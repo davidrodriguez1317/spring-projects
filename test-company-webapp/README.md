@@ -77,9 +77,17 @@ Additionally, the cURL commands that can be used with the REST API in the server
 
 	curl -H "Content-Type: application/json" -X GET https://test-company-app.herokuapp.com/company/all
 
-- Try to insert a company that not validates, i.e name smaller than 2 characters
+- Try to insert a company that not validates, i.e name smaller than 2 characters ---
 
 	curl -X POST https://test-company-app.herokuapp.com/company -H "Content-Type: application/json" --data "{\"name\":\"s\",\"address\":\"Elm Street\",\"city\":\"Chicago\",\"country\":\"USA\",\"email\":\"freddycomesforyou@hotmail.com\",\"phone\":\"+0031 677 89 90 66\",\"beneficialOwners\":[]}"
+
+- Modification of an existing company ---
+
+	curl -X PUT https://test-company-app.herokuapp.com/company/1 -H "Content-Type: application/json" --data "{\"id\":1,\"name\":\"Big Company v11\",\"address\":\"Elm Street\",\"city\":\"New York\",\"country\":\"USA\",\"email\":\"freddycomesforyou@hotmail.com\",\"phone\":\"+0031 677 89 90 66\",\"beneficialOwners\":[]}"
+
+- Modification of a non-existing company (A result of 404 will be recieved) ---
+
+	curl -X PUT https://test-company-app.herokuapp.com/company/11 -H "Content-Type: application/json" --data "{\"id\":11,\"name\":\"Big Company v11\",\"address\":\"Elm Street\",\"city\":\"New York\",\"country\":\"USA\",\"email\":\"freddycomesforyou@hotmail.com\",\"phone\":\"+0031 677 89 90 66\",\"beneficialOwners\":[]}"
 
 - Try to insert several beneficial owners to a company
 
